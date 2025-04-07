@@ -1,9 +1,49 @@
+# pyproject.toml
+
+[build-system]
+requires = ["hatchling"] # Modern build backend
+build-backend = "hatchling.build"
+
 [project]
 name = "hashing-mcp"
 version = "0.1.0"
 description = "An MCP Server offering tools to calculate MD5 and SHA-256 cryptographic hashes for text data, designed for use with LLMs."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Kunal Pathak", email = "contact@kunal-pathak.com" },
+]
+keywords = ["mcp", "hashing", "md5", "sha256", "llm", "ai", "tools"]
+classifiers = [
+    "Development Status :: 3 - Alpha", # Adjust as appropriate
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License", # Match your license
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "mcp[cli]>=1.6.0",
 ]
+
+[project.urls]
+Repository = "https://github.com/kanad13/MCP-Server-for-Hashing"
+
+[project.scripts]
+# This creates a command-line script when the package is installed.
+# `hashing-mcp-server` is the command you'll run.
+# `hashing_mcp.cli:main` points to the `main` function in `src/hashing_mcp/cli.py`.
+hashing-mcp-server = "hashing_mcp.cli:main"
+
+# --- Build configuration specific to Hatch ---
+[tool.hatch.build.targets.sdist]
+# Include everything under src/ in the source distribution
+include = ["/src", "/pyproject.toml", "/README.md", "/LICENSE"]
+
+[tool.hatch.build.targets.wheel]
+# Only include the actual package code in the wheel
+packages = ["src/hashing_mcp"]
