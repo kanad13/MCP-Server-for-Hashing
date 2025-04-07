@@ -1,9 +1,32 @@
 [project]
-name = "hashing-mcp"
+name = "hashing-mcp-server" #<-- Slightly more descriptive name
 version = "0.1.0"
 description = "An MCP Server offering tools to calculate MD5 and SHA-256 cryptographic hashes for text data, designed for use with LLMs."
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13" #<-- Keep your version
+license = { text = "MIT" } #<-- Added license (choose appropriate)
+authors = [
+    { name = "Your Name", email = "your.email@example.com" }, #<-- Add author info
+]
+keywords = ["hash", "md5", "sha256", "mcp", "llm"] #<-- Added keywords
+
 dependencies = [
-    "mcp[cli]>=1.6.0",
+    "mcp[cli]>=1.6.0", #<-- Kept original dependency spec
+]
+
+# Define the command-line script entry point
+[project.scripts]
+hashing-mcp-server = "hashing_mcp:main"
+
+[build-system]
+requires = ["hatchling"] #<-- Or setuptools, depending on preference
+build-backend = "hatchling.build"
+
+# Define development dependencies using uv's section (or tool.pdm, tool.poetry etc.)
+[tool.uv]
+dev-dependencies = [
+    "pytest >=8.0.0",
+    "pytest-asyncio >=0.23.0",
+    "ruff >=0.4.0", #<-- Optional: For linting/formatting
+    "pyright >=1.1.360" #<-- Optional: For type checking
 ]
