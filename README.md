@@ -1,138 +1,178 @@
-# Build your own MCP Hashing server
+[![PyPI version](https://badge.fury.io/py/hashing-mcp.svg)](https://badge.fury.io/py/hashing-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- **On this page**
-- This page shows how to build the MCP Hashing server and connect it to a client of your choice.
-  - **Supported Hosts:**
-  - [VS Code](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
-  - [Claude for Desktop](https://modelcontextprotocol.io/introduction)
-  - [Open AI ChatGPT](https://openai.github.io/openai-agents-python/mcp/)
-- **What we will be building**
-  - A simple server that calculates the MD5 and SHA256 hashes of a string.
-  - The server will be built using the MCP framework.
-  - It will expose two tools: `calculate_md5` and `calculate_sha256`.
+# Hashing MCP Server Package
 
-## Setup environment
+This repository provides an installable Python package containing a straightforward [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. It offers tools to calculate MD5 and SHA-256 cryptographic hashes for text data, designed for easy integration with MCP clients like VS Code Copilot Chat, Claude for Desktop, or other LLM interfaces supporting the protocol.
 
-- **Install uv**
-  - uv is a command line tool that helps you create and manage virtual environments.
-  - It is a wrapper around the built-in `venv` module.
-  - It is similar to `virtualenv`, but it is more lightweight and easier to use.
-  - Installation instructions [here](https://docs.astral.sh/uv/getting-started/installation/)
-- **Setup Hashing project**
-  - Follow these steps in your terminal:
+## Purpose of this Repository
+
+This repository serves two main purposes:
+
+1.  **Provides a ready-to-use `hashing-mcp` server package:** You can install this package directly to add hashing capabilities to your MCP-enabled application. See **Installation** and **Usage** sections below.
+2.  **Acts as an educational resource:** It includes detailed guides to help you understand MCP concepts and learn how this specific server was built. See the **Learning More** section below.
+
+## Key Features
+
+- Provides an MCP tool `calculate_md5` for MD5 hashing.
+- Provides an MCP tool `calculate_sha256` for SHA-256 hashing.
+- Runs as an MCP server using `stdio` transport, ideal for desktop clients.
+- Installable as a standard Python package (`pip install hashing-mcp`).
+- Provides a command-line entry point (`hashing-mcp-server`) to easily start the server.
+
+## Learning More
+
+This repository also contains detailed guides for understanding and building MCP servers:
+
+- **Conceptual Guide:** To understand the Model Context Protocol (MCP), its architecture, and its role in Agentic AI, please read:
+  - [docs/understanding-mcp.md](docs/understanding-mcp.md)
+- **Step-by-Step Tutorial:** To learn how this `hashing-mcp` server package is structured and built (including Python packaging), follow the tutorial:
+  - [docs/tutorial-build-mcp-server.md](docs/tutorial-build-mcp-server.md)
+    _(Note: This guide walks through creating the package structure found in this repository.)_
+
+## Installation
+
+Ensure you have Python 3.10 or later installed. I recommend using a virtual environment.
+
+**Using `uv` (Recommended):**
 
 ```bash
-# Create a new directory for our project
-uv init hashing_mcp
-cd hashing_mcp
+# Create a new directory (optional, but good practice)
+mkdir my_mcp_setup && cd my_mcp_setup
 
 # Create virtual environment and activate it
 uv venv
+source .venv/bin/activate  # On Linux/macOS
+# .venv\Scripts\activate    # On Windows
+
+# Install the package
+uv pip install hashing-mcp
+```
+
+**Using `pip`:**
+
+```bash
+# Create a new directory (optional, but good practice)
+mkdir my_mcp_setup && cd my_mcp_setup
+
+# Create virtual environment
+python -m venv .venv
+
+# Activate it
+# Linux/macOS:
 source .venv/bin/activate
+# Windows (Command Prompt/PowerShell):
+# .venv\Scripts\activate
 
-# Install dependencies
-uv add "mcp[cli]"
-
-# Create our server file
-touch hashing_utility.py
+# Install the package
+pip install hashing-mcp
 ```
 
-## Build MCP Server
+## Usage
 
-- Open `hashing_utility.py` and add the following code:
+Once the package is installed and your virtual environment is activated, you can start the MCP server.
 
-```python
-import hashlib
-from mcp.server.fastmcp import FastMCP
+**1. Run the Server:**
 
-# Initialize FastMCP server with a descriptive name
-mcp = FastMCP("hashing")
+Open your terminal and run:
 
-@mcp.tool()
-async def calculate_md5(text_data: str) -> str:
-    """Calculates the MD5 hash for the provided text data.
-
-    Args:
-        text_data: The string data to hash.
-
-    Returns:
-        The hexadecimal MD5 digest of the text data.
-    """
-    # Hash functions operate on bytes, so encode the string (UTF-8 is standard)
-    encoded_data = text_data.encode('utf-8')
-    hasher = hashlib.md5()
-    hasher.update(encoded_data)
-    hex_digest = hasher.hexdigest()
-    print(f"Received text for MD5: '{text_data[:50]}...'") # Optional: log input
-    print(f"Calculated MD5: {hex_digest}")             # Optional: log output
-    return hex_digest
-
-@mcp.tool()
-async def calculate_sha256(text_data: str) -> str:
-    """Calculates the SHA-256 hash for the provided text data.
-
-    Args:
-        text_data: The string data to hash.
-
-    Returns:
-        The hexadecimal SHA-256 digest of the text data.
-    """
-    # Hash functions operate on bytes, so encode the string (UTF-8 is standard)
-    encoded_data = text_data.encode('utf-8')
-    hasher = hashlib.sha256()
-    hasher.update(encoded_data)
-    hex_digest = hasher.hexdigest()
-    print(f"Received text for SHA256: '{text_data[:50]}...'") # Optional: log input
-    print(f"Calculated SHA256: {hex_digest}")           # Optional: log output
-    return hex_digest
-
-if __name__ == "__main__":
-    print("Starting Hashing MCP Server...")
-    # Initialize and run the server using stdio transport for desktop clients
-    mcp.run(transport='stdio')
-    print("Hashing MCP Server stopped.")
+```bash
+hashing-mcp-server
 ```
 
-## Configure MCP Server
+This command starts the server, which will listen for MCP requests via standard input/output (stdio). You typically won't interact with this terminal directly after starting it; your MCP client will communicate with it in the background. Press `Ctrl+C` to stop the server.
 
-- **MCP follows a client-server architecture**
-  - `MCP clients (like VS Code)` connect to MCP servers and request actions on behalf of the AI model
-  - `MCP servers` provide one or more tools that expose specific functionalities through a well-defined interface
-  - The `Model Context Protocol (MCP)` defines the message format for communication between clients and servers, including tool discovery, invocation, and response handling
-- **What we will do now**
-  - Previous steps created a server that can calculate the MD5 and SHA256 hashes of a string.
-  - Now we will configure a client to connect to this server and use it.
-  - We will use VS Code as our client as described [here](https://code.visualstudio.com/docs/copilot/chat/mcp-servers).
-  - To follow the same instructions for Claude for Desktop, see [here](https://modelcontextprotocol.io/quickstart/user).
-- **Configure MCP Server in VS Code**
-  - Open your settings.json for vscode workspace or user, and add this entry:
+**2. Configure Your MCP Client:**
 
-```json
-"mcp": {
-		"servers": {
-			"hashing": {
-				"command": "uv",
-				"args": [
-					"--directory",
-					"/actual-path-to-your-folder/hashing_mcp",
-					"run",
-					"hashing_utility.py"
-				]
-			}
-		}
-	}
-```
+Configure your MCP client (e.g., VS Code, Claude Desktop) to use the installed `hashing-mcp-server`. The key is to tell the client the **exact command** needed to run the server script.
 
-## Test MCP Server
+- **Find the Executable Path:** After activating your virtual environment, find the absolute path to the installed script:
 
-- **Ask questions like**
-  - "Calculate the MD5 hash of the text 'hello world'"
-  - "What is the SHA256 hash for the string 'MCP is cool!'?"
-  - "Use the calculate_sha256 tool on this sentence: The quick brown fox jumps over the lazy dog."
-- **Expected behavior**
-  - VSCode should
-    - recognize the request,
-    - identify the appropriate tool (`calculate_md5` or `calculate_sha256`),
-    - ask for your permission to run it,
-    - execute the tool via your local `hashing_utility.py` script, and
-    - return the hexadecimal hash result.
+  - On Linux/macOS: `which hashing-mcp-server`
+  - On Windows: `where hashing-mcp-server`
+  - Copy the full path output by the command.
+
+- **Example: VS Code (`settings.json`)**
+
+  _**Important:** Replace `/path/to/your/virtualenv/bin/hashing-mcp-server` with the **actual absolute path** you found above._
+
+  ```json
+  // In your VS Code settings.json (User or Workspace)
+  "mcp": {
+      "servers": {
+          // You can name this key anything, e.g., "hasher" or "cryptoTools"
+          "hashing": {
+              // Use the full, absolute path to the executable within your virtual environment
+              "command": "/path/to/your/virtualenv/bin/hashing-mcp-server"
+              // No 'args' needed when running the installed script directly
+          }
+      }
+  }
+  ```
+
+- **Example: Other Clients (Claude, OpenAI Agents, etc.)**
+
+  Follow the specific instructions for your client application. When asked for the command or path to the MCP server, provide the **full absolute path** to the `hashing-mcp-server` executable you found earlier. Refer to their documentation:
+
+  - [Claude for Desktop](https://modelcontextprotocol.io/quickstart/user)
+  - [Open AI ChatGPT Agents (via Python)](https://openai.github.io/openai-agents-python/mcp/)
+
+**3. Test the Integration:**
+
+Once configured, ask your MCP client questions that should trigger the tools:
+
+- "Calculate the MD5 hash of the text 'hello world'"
+- "What is the SHA256 hash for the string 'MCP is cool!'?"
+- "Use the calculate_sha256 tool on this sentence: The quick brown fox jumps over the lazy dog."
+
+The client should identify the request, invoke the `hashing-mcp-server` via the configured command, and display the calculated hash result.
+
+## Development (Contributing)
+
+If you want to modify or contribute to this package:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/kanad13/MCP-Server-for-Hashing.git
+    cd MCP-Server-for-Hashing
+    ```
+2.  **Set up the development environment (using uv):**
+    ```bash
+    # Create and activate virtual environment
+    uv venv
+    source .venv/bin/activate # or .venv\Scripts\activate on Windows
+    ```
+3.  **Install in editable mode with development dependencies:**
+    Install the package such that changes in `src/` are reflected immediately. Also installs optional dependencies defined under `[project.optional-dependencies.dev]` in `pyproject.toml` (e.g., `pytest`, `ruff`).
+    ```bash
+    uv pip install -e ".[dev]"
+    ```
+    _(Make sure to add relevant tools like `pytest`, `ruff`, `mypy` to the `[project.optional-dependencies.dev]` section in `pyproject.toml` if you haven't already)._
+4.  **Run the server during development:**
+    You can run the server using the script (available due to `-e`):
+    ```bash
+    hashing-mcp-server
+    ```
+    Or execute the module directly:
+    ```bash
+    python -m hashing_mcp.cli
+    ```
+
+## Packaging and Publishing to PyPI
+
+_(For maintainers - Steps to release a new version)_
+
+1.  **Install build tools:** `uv pip install build twine`
+2.  **Clean previous builds:** `rm -rf dist/ build/ src/*.egg-info`
+3.  **Build the package:** `python -m build`
+4.  **Check the distribution files:** `twine check dist/*`
+5.  **Upload to PyPI:** `twine upload dist/*` (Use `--repository testpypi` for testing)
+6.  **Tag the release:** `git tag vX.Y.Z && git push --tags`
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+- [Anthropic & Model Context Protocol Docs](https://modelcontextprotocol.io)
