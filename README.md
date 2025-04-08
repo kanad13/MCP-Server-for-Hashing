@@ -1,3 +1,6 @@
+[![PyPI version](https://badge.fury.io/py/hashing-mcp.svg)](https://badge.fury.io/py/hashing-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Hashing MCP Server Package
 
 This repository provides an installable Python package containing a straightforward [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server. It offers tools to calculate MD5 and SHA-256 cryptographic hashes for text data, designed for easy integration with MCP clients like VS Code Copilot Chat, Claude for Desktop, or other LLM interfaces supporting the protocol.
