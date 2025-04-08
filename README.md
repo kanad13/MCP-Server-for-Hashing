@@ -1,11 +1,17 @@
 # Hashing MCP Server Package
 
-A straightforward [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server providing tools to calculate MD5 and SHA-256 cryptographic hashes for text data. It's designed for easy integration with MCP clients like VS Code Copilot Chat, Claude for Desktop, or other LLM interfaces supporting the protocol.
+This repository provides a straightforward [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server providing tools to calculate MD5 and SHA-256 cryptographic hashes for text data. It's designed for easy integration with MCP clients like VS Code Copilot Chat, Claude for Desktop, or other LLM interfaces supporting the protocol.
 
 This package exposes two primary tools:
 
 - `calculate_md5`: Calculates the MD5 hash of a given string.
 - `calculate_sha256`: Calculates the SHA-256 hash of a given string.
+
+## In this repository
+
+- This repository contains the source code for the MCP server that provides hashing tools.
+- If you are new to the concept of Model Context Protocol (MCP), you can refer to my [guide with helpful diagrams here](./understanding-model-context-protocol).
+- If you would like to build your own MCP server, you can refer to the detailed guide I have prepared [here](./build-your-own-server.md).
 
 ## Features
 
