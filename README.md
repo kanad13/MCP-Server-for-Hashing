@@ -25,9 +25,9 @@ This repository serves two main purposes:
 This repository also contains detailed guides for understanding and building MCP servers:
 
 - **Conceptual Guide:** To understand the Model Context Protocol (MCP), its architecture, and its role in Agentic AI, please read:
-  - [docs/understanding-mcp.md](docs/understanding-mcp.md)
+  - [docs/understanding-mcp.md](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/understanding-mcp.md)
 - **Step-by-Step Tutorial:** To learn how this `hashing-mcp` server package is structured and built (including Python packaging), follow the tutorial:
-  - [docs/tutorial-build-mcp-server.md](docs/tutorial-build-mcp-server.md)
+  - [docs/tutorial-build-mcp-server.md](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/tutorial-build-mcp-server.md)
     _(Note: This guide walks through creating the package structure found in this repository.)_
 
 ## Installation
