@@ -1,32 +1,38 @@
 # MCP Server for cryptographic hashing
 
-Here you will find an installable Python package containing a [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for cryptographic hashing.
+A Model Context Protocol (MCP) server for MD5 and SHA-256 hashing. This server enables LLMs to process cryptographic requests efficiently.
 
-It offers tools to calculate MD5 and SHA-256 cryptographic hashes for text data, designed for easy integration with MCP clients like VS Code Copilot Chat, Claude for Desktop, or other LLM interfaces supporting the protocol.
+## Available Tools
 
-## Purpose of this Repository
+The server offers 2 tools:
 
-[This repository serves two main purposes](https://github.com/kanad13/MCP-Server-for-Hashing):
+- `calculate_md5`: Computes the MD5 hash of a given text.
+- `calculate_sha256`: Computes the SHA-256 hash of a given text.
+
+The server is designed to be used with MCP clients like VS Code Copilot Chat, Claude for Desktop, and other LLM interfaces that support the [Model Context Protocol](https://modelcontextprotocol.io).
+
+## Code Overview
+
+[This Github repository serves two main purposes](https://github.com/kanad13/MCP-Server-for-Hashing):
 
 1.  **Provides a ready-to-use `hashing-mcp` server package:** You can install this package directly to add hashing capabilities to your MCP-enabled application. See **Installation** and **Usage** sections below.
 2.  **Acts as an educational resource:** It includes detailed guides to help you understand MCP concepts and learn how this specific server was built. See the **Learning More** section below.
 
-## Key Features
+## Understanding Model Context Protocol
 
-- Provides an MCP tool `calculate_md5` for MD5 hashing.
-- Provides an MCP tool `calculate_sha256` for SHA-256 hashing.
-- Runs as an MCP server using `stdio` transport, ideal for desktop clients.
-- Installable as a standard Python package (`pip install hashing-mcp`).
+Check out these resources for understanding and building MCP servers:
 
-## Learning More
-
-This repository also contains detailed guides for understanding and building MCP servers:
-
-- **Conceptual Guide:** To understand the Model Context Protocol (MCP), its architecture, and its role in Agentic AI, please read:
-  - [docs/understanding-mcp.md](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/understanding-mcp.md)
-- **Step-by-Step Tutorial:** To learn how this `hashing-mcp` server package is structured and built (including Python packaging), follow the tutorial:
-  - [docs/tutorial-build-mcp-server.md](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/tutorial-build-mcp-server.md)
+- **What is MCP?**
+  - [Understanding Model Context Protocol & Agentic AI](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/understanding-mcp.md)
+- **How can I build my own MCP Server?**
+  - [Simple tutorial on how to build your own MCP Server](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/tutorial-build-mcp-server.md)
     _(Note: This guide walks through creating the package structure found in this repository.)_
+
+## Server in action
+
+The gif below shows how the MCP server processes requests and returns the corresponding cryptographic hashes.
+I have used VSCode as an example, but it works equally well with other MCP clients like Claude for Desktop.
+![MCP Server in action](https://raw.githubusercontent.com/kanad13/MCP-Server-for-Hashing/master/assets/mcp-server.gif)
 
 ## Installation
 
@@ -145,7 +151,6 @@ If you want to modify or contribute to this package:
     ```bash
     uv pip install -e ".[dev]"
     ```
-    _(Make sure to add relevant tools like `pytest`, `ruff`, `mypy` to the `[project.optional-dependencies.dev]` section in `pyproject.toml` if you haven't already)._
 4.  **Run the server during development:**
     You can run the server using the script (available due to `-e`):
     ```bash
@@ -160,12 +165,13 @@ If you want to modify or contribute to this package:
 
 _(For maintainers - Steps to release a new version)_
 
-1.  **Install build tools:** `uv pip install build twine`
-2.  **Clean previous builds:** `rm -rf dist/ build/ src/*.egg-info`
-3.  **Build the package:** `python -m build`
-4.  **Check the distribution files:** `twine check dist/*`
-5.  **Upload to PyPI:** `twine upload dist/*` (Use `--repository testpypi` for testing)
-6.  **Tag the release:** `git tag vX.Y.Z && git push --tags`
+1.  Ensure that venv is activated: `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows).
+2.  **Install build tools:** `uv pip install build twine`
+3.  **Clean previous builds:** `rm -rf dist/ build/ src/*.egg-info`
+4.  **Build the package:** `python -m build`
+5.  **Check the distribution files:** `twine check dist/*`
+6.  **Upload to PyPI:** `twine upload dist/*` (Use `--repository testpypi` for testing)
+7.  **Tag the release:** `git tag vX.Y.Z && git push --tags`
 
 ## License
 
