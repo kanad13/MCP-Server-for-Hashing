@@ -10,19 +10,19 @@ Large Language Models (LLMs) don't "think" or "remember" in the human sense.
 
 Their ability to generate good responses depends entirely on the **context** provided.
 
-![](/assets/mcp-50.png)
+![](../assets/mcp-50.png)
 
 ## What Constitutes "Context"?
 
 Context is defined as `any information that can help an LLM generate a better response.`
 
-![](/assets/mcp-51.png)
+![](../assets/mcp-51.png)
 
 ## Why is Context Standardization Important?
 
 Context standardization improves the quality of LLM responses by ensuring that the information provided is relevant, accurate, and structured in a way that the model can effectively utilize.
 
-![](/assets/mcp-52.png)
+![](../assets/mcp-52.png)
 
 ## What is MCP?
 
@@ -36,7 +36,7 @@ Context standardization improves the quality of LLM responses by ensuring that t
   - MCP places a strong emphasis on standardizing access to dynamic, external data sources (files, databases, APIs) required for grounding LLM responses (e.g., for Retrieval-Augmented Generation - RAG).
   - MCP also aims to simplify the integration process for developers, making it easier to build applications that leverage LLM capabilities.
 
-![](/assets/mcp-53.png)
+![](../assets/mcp-53.png)
 
 ## How does MCP correlate with Agentic AI?
 
@@ -53,7 +53,7 @@ Context standardization improves the quality of LLM responses by ensuring that t
     3. **Stage 3: LLMs with Full Agency (MCP)**
        - LLMs can interact with multiple tools and data sources through a standardized protocol (MCP), making them more robust and easier to integrate.
 
-![](/assets/mcp-11.png)
+![](../assets/mcp-11.png)
 
 - **Stage 01 Capabilities**
   - Generates coherent text, code, etc.
@@ -63,7 +63,7 @@ Context standardization improves the quality of LLM responses by ensuring that t
   - Operates purely on internal knowledge and cannot interact with or affect the external world (e.g., browse live websites, query databases, send messages).
   - It can generate code to do these things, but cannot execute it.
 
-![](/assets/mcp-12.png)
+![](../assets/mcp-12.png)
 
 - **Improvement over Stage 01**
   - LLM gains agency.
@@ -76,7 +76,7 @@ Context standardization improves the quality of LLM responses by ensuring that t
   - Any change to a tool's API (new parameters, endpoint changes) breaks the integration and requires developers to update the LLM application code.
   - This is difficult to scale and error-prone.
 
-![](/assets/mcp-13.png)
+![](../assets/mcp-13.png)
 
 - **Improvement over Stage 2**
   - Introduces a standardized interface (MCP) acting as a middle layer.
@@ -91,7 +91,7 @@ Context standardization improves the quality of LLM responses by ensuring that t
 
 Diagram below shows the architecture of the Model Context Protocol (MCP).
 
-![](/assets/mcp-21.png)
+![](../assets/mcp-21.png)
 
 - **Components of the MCP architecture**
   - `MCP Hosts`
@@ -119,13 +119,13 @@ Diagram below shows the architecture of the Model Context Protocol (MCP).
 
 It enables seamless communication between applications and data sources, ensuring that tools can be accessed in a consistent manner.
 
-![](/assets/mcp-31.png)
+![](../assets/mcp-31.png)
 
 ## MCP client-server interaction
 
 This section shows how the MCP client-server interaction works.
 
-![](/assets/mcp-41.png)
+![](../assets/mcp-41.png)
 
 ## Source Drawing for Images
 

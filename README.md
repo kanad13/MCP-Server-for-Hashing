@@ -10,8 +10,8 @@ This package exposes two primary tools:
 ## In this repository
 
 - This repository contains the source code for the MCP server that provides hashing tools.
-- If you are new to the concept of Model Context Protocol (MCP), you can refer to my [guide with helpful diagrams here](./understanding-model-context-protocol).
-- If you would like to build your own MCP server, you can refer to the detailed guide I have prepared [here](./build-your-own-server.md).
+- If you are new to the concept of Model Context Protocol (MCP), you can refer to my [guide with helpful diagrams here](./docs/understanding-mcp.md).
+- If you would like to build your own MCP server, you can refer to the detailed guide I have prepared [here](./docs/tutorial-build-mcp-server.md).
 
 ## Features
 
