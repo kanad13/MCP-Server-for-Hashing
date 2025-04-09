@@ -32,7 +32,7 @@ Check out these resources for understanding and building MCP servers:
 
 The gif below shows how the MCP server processes requests and returns the corresponding cryptographic hashes.
 I have used VSCode as an example, but it works equally well with other MCP clients like Claude for Desktop.
-![MCP Server in action](https://raw.githubusercontent.com/kanad13/MCP-Server-for-Hashing/master/assets/mcp-server.gif)
+![MCP Server in action](/assets/mcp-54.gif)
 
 ## Installation
 
@@ -167,7 +167,7 @@ _(For maintainers - Steps to release a new version)_
 
 1.  Ensure that venv is activated: `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows).
 2.  **Install build tools:** `uv pip install build twine`
-3.  **Clean previous builds:** `rm -rf dist/ build/ src/*.egg-info`
+3.  **Clean previous builds:** `rm -rf ./dist/*`
 4.  **Build the package:** `python -m build`
 5.  **Check the distribution files:** `twine check dist/*`
 6.  **Upload to PyPI:** `twine upload dist/*` (Use `--repository testpypi` for testing)
