@@ -34,6 +34,11 @@ The gif below shows how the MCP server processes requests and returns the corres
 I have used VSCode as an example, but it works equally well with other MCP clients like Claude for Desktop.
 ![MCP Server in action](/assets/mcp-54.gif)
 
+## Prerequisites
+
+- Python 3.10 or later installed.
+- A tool to manage virtual environments (like Python's built-in `venv` or `uv`).
+
 ## Installation
 
 Ensure you have Python 3.10 or later installed. I recommend using a virtual environment.
@@ -88,17 +93,32 @@ This command starts the server, which will listen for MCP requests via standard 
 
 **2. Configure Your MCP Client:**
 
-Configure your MCP client (e.g., VS Code, Claude Desktop) to use the installed `hashing-mcp-server`. The key is to tell the client the **exact command** needed to run the server script.
+Configure your MCP client (e.g., VS Code, Claude Desktop) to use the installed `hashing-mcp-server`. The key is to tell the client the **exact command** needed to run the server script _within the virtual environment where you installed it_.
 
-- **Find the Executable Path:** After activating your virtual environment, find the absolute path to the installed script:
+- **Find the Executable Path:**
 
-  - On Linux/macOS: `which hashing-mcp-server`
-  - On Windows: `where hashing-mcp-server`
-  - Copy the full path output by the command.
+  1.  **Activate** the virtual environment where you installed `hashing-mcp`.
+      ```bash
+      # Example activation (adjust for your OS/shell)
+      source .venv/bin/activate
+      ```
+  2.  **Find the absolute path** to the installed script using the `which` (Linux/macOS) or `where` (Windows) command:
+
+      ```bash
+      # On Linux/macOS:
+      which hashing-mcp-server
+      # Example Output: /home/user/my_mcp_setup/.venv/bin/hashing-mcp-server
+
+      # On Windows (Command Prompt/PowerShell):
+      where hashing-mcp-server
+      # Example Output: C:\Users\User\my_mcp_setup\.venv\Scripts\hashing-mcp-server.exe
+      ```
+
+  3.  **Copy the full path** shown in the output. This is the path your MCP client needs.
 
 - **Example: VS Code (`settings.json`)**
 
-  _**Important:** Replace `/path/to/your/virtualenv/bin/hashing-mcp-server` with the **actual absolute path** you found above._
+  _**Important:** Replace `/path/to/your/virtualenv/bin/hashing-mcp-server` with the **actual absolute path** you found using `which` or `where`._
 
   ```json
   // In your VS Code settings.json (User or Workspace)
@@ -106,7 +126,7 @@ Configure your MCP client (e.g., VS Code, Claude Desktop) to use the installed `
       "servers": {
           // You can name this key anything, e.g., "hasher" or "cryptoTools"
           "hashing": {
-              // Use the full, absolute path to the executable within your virtual environment
+              // Use the full, absolute path to the executable *within your virtual environment*
               "command": "/path/to/your/virtualenv/bin/hashing-mcp-server"
               // No 'args' needed when running the installed script directly
           }

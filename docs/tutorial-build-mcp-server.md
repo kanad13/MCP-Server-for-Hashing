@@ -10,6 +10,9 @@
   - A simple server that calculates the MD5 and SHA256 hashes of a string.
   - The server will be built using the MCP framework.
   - It will expose two tools: `calculate_md5` and `calculate_sha256`.
+- **Important Note**
+  - This tutorial focuses on creating a basic, single-file MCP server (`my_hashing_server.py`) for quick experimentation, similar to the official [MCP quick start guide](https://modelcontextprotocol.io/quickstart/server).
+  - For a more structured, package-ready example (using `src/` layout, build tools, etc.), please refer to the main code and main README in this repository.
 
 ## Setup environment
 
@@ -34,12 +37,12 @@ source .venv/bin/activate
 uv add "mcp[cli]"
 
 # Create our server file
-touch hashing_utility.py
+touch my_hashing_server.py
 ```
 
 ## Build MCP Server
 
-- Open `hashing_utility.py` and add the following code:
+- Open `my_hashing_server.py` and add the following code:
 
 ```python
 import hashlib
@@ -110,13 +113,13 @@ if __name__ == "__main__":
 ```json
 "mcp": {
 		"servers": {
-			"hashing": {
+			"hashing-tutorial": {
 				"command": "uv",
 				"args": [
 					"--directory",
 					"/actual-path-to-your-folder/hashing_mcp",
 					"run",
-					"hashing_utility.py"
+					"my_hashing_server.py"
 				]
 			}
 		}
@@ -136,3 +139,21 @@ if __name__ == "__main__":
     - ask for your permission to run it,
     - execute the tool via your local `hashing_utility.py` script, and
     - return the hexadecimal hash result.
+
+## (Optional) Next Steps: Packaging Your Server
+
+- While this tutorial created a single runnable script (`my_hashing_server.py`), real-world tools are often distributed as installable Python packages. This makes them easier to share and manage.
+- If you wanted to turn this simple server into a package, you would typically:
+  - **Restructure:** Move the code into a proper package structure (e.g., `src/my_package_name/server.py`).
+  - **Create `pyproject.toml`:** Define package metadata (name, version, dependencies) and build system details. Crucially, you'd define an entry point script.
+  - **Define Script Entry Point:** Add a section like this to `pyproject.toml`:
+
+```toml
+[project.scripts]
+my-hashing-server-command = "my_package_name.cli:main"
+```
+
+- This requires creating a `cli.py` file with a `main` function that runs `mcp.run()`.
+- **Build & Install:** Use tools like `uv` or `pip` with `build` to create distributable files (wheels) and install the package into a virtual environment.
+- **Update Client Config:** The client configuration (e.g., VS Code `settings.json`) would then use the _installed script command_ (e.g., `/path/to/venv/bin/my-hashing-server-command`) instead of `uv run ...`.
+- **For a complete example of a packaged MCP server, examine the structure and `pyproject.toml` file in the root of this repository, which builds the `hashing-mcp` package.**
