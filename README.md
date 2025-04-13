@@ -32,7 +32,7 @@ I have used Claude Desktop as an example, but it works equally well with other M
 
 ## Prerequisites
 
-- Python 3.10 or later installed.
+- Python 3.13 or later installed.
 - A tool to manage virtual environments (like Python's built-in `venv` or `uv`).
 
 ## Installation
