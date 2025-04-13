@@ -33,7 +33,7 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/kanad13/MCP-Server-for-Hashing"
 Documentation = "https://www.kunal-pathak.com/blog/model-context-protocol/"
-# PyPI = "https://pypi.org/project/hashing-mcp-server/"
+PyPI = "https://pypi.org/project/hashing-mcp-server/"
 
 [project.scripts]
 hashing-mcp-server = "hashing_mcp.cli:main" # This maps the command to your Python code entry point
