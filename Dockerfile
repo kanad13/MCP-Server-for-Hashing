@@ -1,6 +1,6 @@
 # Use an official Python runtime as a parent image
 # Using '-slim' reduces image size compared to the full image
-FROM python:slim AS base
+FROM python:3.13-slim AS base
 
 # Set environment variables using the recommended KEY=VALUE format
 # Prevents python from writing .pyc files
