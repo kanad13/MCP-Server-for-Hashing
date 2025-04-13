@@ -19,8 +19,8 @@ If you are new to the concept of Model Context Protocol (MCP), then you can use 
   - [Understanding Model Context Protocol & Agentic AI](https://www.kunal-pathak.com/blog/model-context-protocol/)
 - **How can I build my own MCP Server?**
   - [Simple tutorial on how to build your own MCP Server](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/tutorial-build-mcp-server.md)
-- **Where to find the `hashing-mcp` server package?**
-  - You can find the [Python Package on PyPI](https://pypi.org/project/hashing-mcp/)
+- **Where to find the `hashing-mcp-server` package?**
+  - You can find the [Python Package on PyPI](https://pypi.org/project/hashing-mcp-server/)
   - You can find the source code in this [GitHub repository](https://github.com/kanad13/MCP-Server-for-Hashing)
   - See the sections below for installation and usage instructions.
 
@@ -37,7 +37,7 @@ I have used Claude Desktop as an example, but it works equally well with other M
 
 ## Installation
 
-This section covers installing the `hashing-mcp` package into a virtual environment, which is necessary if you plan to run the server directly using Python. If you only plan to use Docker, you can skip this section, but you will need Docker installed.
+This section covers installing the `hashing-mcp-server` package into a virtual environment, which is necessary if you plan to run the server directly using Python. If you only plan to use Docker, you can skip this section, but you will need Docker installed.
 
 **(Choose one method: `uv` or `pip`)**
 
@@ -56,7 +56,7 @@ source .venv/bin/activate
 # (Ensure you are in the 'my_mcp_setup' directory when activating)
 
 # Install the package
-uv pip install hashing-mcp
+uv pip install hashing-mcp-server
 ```
 
 **2. Using `pip`:**
@@ -76,7 +76,7 @@ source .venv/bin/activate
 # (Ensure you are in the 'my_mcp_setup' directory when activating)
 
 # Install the package
-pip install hashing-mcp
+pip install hashing-mcp-server
 ```
 
 _(Installation via pip/uv is now complete. The `hashing-mcp-server` command is available within the activated virtual environment.)_
@@ -277,7 +277,7 @@ If you want to modify or contribute to this package:
     # .venv\Scripts\activate
     ```
 3.  **Install in editable mode with development dependencies:**
-    Install the package such that changes in `src/` are reflected immediately. Also installs optional dependencies defined under `[project.optional-dependencies.dev]` in `pyproject.toml` (e.g., `pytest`, `ruff`).
+    Install the package (`hashing-mcp-server`) such that changes in `src/` are reflected immediately. Also installs optional dependencies defined under `[project.optional-dependencies.dev]` in `pyproject.toml` (e.g., `pytest`, `ruff`).
     ```bash
     uv pip install -e ".[dev]"
     ```
@@ -291,7 +291,9 @@ If you want to modify or contribute to this package:
     python -m hashing_mcp.cli
     ```
 
-## Packaging and Publishing to PyPI
+## Packaging and Publishing
+
+### Publishing to PyPI
 
 _(For maintainers - Steps to release a new version)_
 
@@ -302,6 +304,33 @@ _(For maintainers - Steps to release a new version)_
 5.  **Check the distribution files:** `twine check dist/*`
 6.  **Upload to PyPI:** `twine upload dist/*` (Use `--repository testpypi` for testing)
 7.  **Tag the release:** `git tag vX.Y.Z && git push --tags`
+
+### Publishing to Docker Hub
+
+_(For maintainers - Steps to release a new version)_
+
+1.  Ensure Docker is running and you are logged in: `docker login`
+2.  Push using `build_and_push.sh`
+
+    1.  Open your terminal in that directory and run:
+
+    ```bash
+    chmod +x build_and_push.sh
+    ```
+
+    Log in to Docker Hub: Make sure you are logged in to your Docker Hub account:
+
+    ```bash
+    docker login -u <your_username>
+    ```
+
+    3. (It will prompt for your password or access token).
+
+    4. Run the Script: Execute the script:
+
+    ```bash
+    ./build_and_push.sh
+    ```
 
 ## License
 

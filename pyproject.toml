@@ -5,8 +5,8 @@ requires = ["hatchling"] # Modern build backend
 build-backend = "hatchling.build"
 
 [project]
-name = "hashing-mcp"
-version = "1.6.0"
+name = "hashing-mcp-server"
+version = "1.8.0"
 description = "An MCP Server offering tools to calculate MD5 and SHA-256 cryptographic hashes for text data, designed for use with LLMs."
 readme = "README.md"
 requires-python = ">=3.13"
@@ -14,7 +14,7 @@ license = { text = "MIT" }
 authors = [
     { name = "Kunal Pathak", email = "contact@kunal-pathak.com" },
 ]
-keywords = ["mcp", "hashing", "md5", "sha256", "llm", "ai", "tools"]
+keywords = ["mcp", "hashing", "md5", "sha256", "llm", "ai", "tools", "server"]
 classifiers = [
     "Development Status :: 3 - Alpha", # Adjust as appropriate
     "Intended Audience :: Developers",
@@ -33,9 +33,10 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/kanad13/MCP-Server-for-Hashing"
 Documentation = "https://www.kunal-pathak.com/blog/model-context-protocol/"
+# PyPI = "https://pypi.org/project/hashing-mcp-server/"
 
 [project.scripts]
-hashing-mcp-server = "hashing_mcp.cli:main"
+hashing-mcp-server = "hashing_mcp.cli:main" # This maps the command to your Python code entry point
 
 # --- Optional Dependencies (for development, testing, etc.) ---
 [project.optional-dependencies]
@@ -52,7 +53,7 @@ dev = [
 include = ["/src", "/pyproject.toml", "/README.md", "/LICENSE", "/docs", "/tests"] # Include docs and tests in sdist
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/hashing_mcp"] # Only include the actual package code in the wheel
+packages = ["src/hashing_mcp"] # <<<--- IMPORTANT: Keep this pointing to the source directory `hashing_mcp`
 
 # --- Pytest Configuration (Optional but Recommended) ---
 [tool.pytest.ini_options]

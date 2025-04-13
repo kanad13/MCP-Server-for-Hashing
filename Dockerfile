@@ -40,5 +40,5 @@ USER appuser
 ENTRYPOINT ["hashing-mcp-server"]
 
 # --- Build Command Reminder ---
-# Build the file with: docker build -t kunalpathak13/hashing-mcp-server:1.6.0 .
-# Push image to Docker Hub with: docker push kunalpathak13/hashing-mcp-server:1.6.0
+# Build the file with: docker build -t kunalpathak13/hashing-mcp-server:1.7.0 .
+# Push image to Docker Hub with: docker push kunalpathak13/hashing-mcp-server:1.7.0
