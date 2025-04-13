@@ -37,7 +37,7 @@ I have used Claude Desktop as an example, but it works equally well with other M
 
 ## Installation
 
-This section covers installing the `hashing-mcp` package into a virtual environment.
+This section covers installing the `hashing-mcp` package into a virtual environment, which is necessary if you plan to run the server directly using Python. If you only plan to use Docker, you can skip this section, but you will need Docker installed.
 
 **(Choose one method: `uv` or `pip`)**
 
@@ -79,9 +79,18 @@ source .venv/bin/activate
 pip install hashing-mcp
 ```
 
-_(Installation is now complete. The `hashing-mcp-server` command is available within the activated virtual environment.)_
+_(Installation via pip/uv is now complete. The `hashing-mcp-server` command is available within the activated virtual environment.)_
 
-## Running the Server Manually (Optional Verification)
+## Running the Server
+
+There are two main ways to run the `hashing-mcp-server`:
+
+1.  **Directly using Python (via `pip` or `uv` install)**: Suitable for development or environments where Docker isn't preferred. Requires managing a Python environment (see Installation section).
+2.  **Using Docker**: Recommended for easier deployment, sandboxing, and consistent environments, especially in production or shared settings.
+
+### Option 1: Running Directly (Python Environment)
+
+This method requires you to have installed the package in a virtual environment as described in the **Installation** section.
 
 Before configuring your client, you can run the server directly from your terminal to ensure it starts correctly. Make sure your virtual environment is still active.
 
@@ -92,9 +101,46 @@ hashing-mcp-server
 
 The server will start and listen for MCP requests on standard input/output (stdio). You won't see much output unless a client connects or an error occurs. Press `Ctrl+C` to stop it. This step confirms the installation worked correctly before proceeding to client configuration.
 
+### Option 2: Running with Docker (Recommended for Deployment)
+
+**Prerequisites:**
+
+- Docker installed and running on your system.
+- A Dockerfile present in the root of this repository (assumed).
+
+**1. Build the Docker Image:**
+
+First, build the Docker image from the repository root:
+
+```bash
+# Navigate to the repository root directory if you aren't already there
+# cd /path/to/MCP-Server-for-Hashing
+docker build -t hashing-mcp-server .
+```
+
+- `-t hashing-mcp-server`: Tags the image with the name `hashing-mcp-server`.
+
+**2. Run the Server in a Container (Manual Test):**
+
+You can test if the container runs correctly:
+
+```bash
+docker run -i --rm hashing-mcp-server
+```
+
+- `-i`: Runs the container in interactive mode, keeping STDIN open so the MCP client can communicate with it.
+- `--rm`: Automatically removes the container when it exits.
+- `hashing-mcp-server`: The name of the image you built.
+
+The server will start inside the container, listening on its standard input/output. Press `Ctrl+C` to stop it.
+
 ## Configuring Your MCP Client
 
-MCP clients need to know the exact command to execute the `hashing-mcp-server`. Since the client application (like VS Code or Claude Desktop) likely won't run with your specific virtual environment automatically activated, you **must** provide the **full, absolute path** to the `hashing-mcp-server` executable _inside_ the virtual environment you created during installation.
+MCP clients need to know how to start the server. Choose the configuration matching how you intend to run the server (Directly or via Docker).
+
+**Method A: Configuring for Direct Execution (Python Environment)**
+
+If you are running the server directly using the installed Python package, clients need the **full, absolute path** to the `hashing-mcp-server` executable _inside_ the virtual environment you created during installation.
 
 **1. Find the Absolute Path:**
 
@@ -110,11 +156,11 @@ where hashing-mcp-server
 # Example Output: C:\Users\User\my_mcp_setup\.venv\Scripts\hashing-mcp-server.exe
 ```
 
-**2. Copy the Full Path** displayed in the output from the command above.
+**2. Copy the Full Path** displayed in the output.
 
 **3. Update Your Client's Configuration:**
 
-Use the copied absolute path in your specific MCP client's settings. Here are some common examples:
+Use the copied absolute path in your specific MCP client's settings:
 
 - **VS Code (`settings.json`):**
 
@@ -148,23 +194,69 @@ Use the copied absolute path in your specific MCP client's settings. Here are so
   }
   ```
 
+- **Other Clients:** Follow their specific instructions, providing the **full absolute path** found in step 1 as the command.
+
+**Method B: Configuring for Docker Execution**
+
+If you built the Docker image (`hashing-mcp-server`), configure your client to use `docker run`:
+
+- **VS Code (`settings.json`):**
+
+  ```json
+  // In your VS Code settings.json (User or Workspace)
+  "mcp": {
+      "servers": {
+          "hashing-docker": { // Use a distinct name if needed
+              "command": "docker",
+              "args": [
+                  "run",
+                  "-i",      // Keep STDIN open for communication
+                  "--rm",    // Clean up container after exit
+                  "hashing-mcp-server" // The name of the image you built
+              ]
+              // "env": {} // Add environment variables here if your server needed them
+          }
+      }
+  }
+  ```
+
+- **Claude Desktop (`claude_desktop_config.json`):**
+
+  ```json
+  {
+  	"mcpServers": {
+  		"hashing-docker": {
+  			// Use a distinct name if needed
+  			"command": "docker",
+  			"args": [
+  				"run",
+  				"-i",
+  				"--rm",
+  				"hashing-mcp-server" // The name of the image you built
+  			]
+  			// "env": {} // Add environment variables here if needed
+  		}
+  	}
+  }
+  ```
+
 - **Other Clients (Claude Web, OpenAI Agents, etc.):**
-  Follow the specific instructions provided by your client application. When prompted for the command or path to the MCP server executable, provide the **full absolute path** you found in step 1. Refer to their official documentation for precise configuration steps:
+  Adapt the `command` and `args` according to their specific configuration format, ensuring you invoke `docker run -i --rm hashing-mcp-server`. Refer to their official documentation for precise configuration steps:
   - [Claude for Desktop/Web Setup](https://modelcontextprotocol.io/quickstart/user)
   - [VSCode MCP using Copilot](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
   - [Open AI ChatGPT Agents (via Python)](https://openai.github.io/openai-agents-python/mcp/)
 
 ## Testing the Integration
 
-Once the server package is installed and your MCP client is configured with the correct absolute path:
+Once the server package is installed (for direct execution) or the Docker image is built, and your MCP client is configured correctly for your chosen method (Direct or Docker):
 
-1.  **Ensure the server can be launched by the client:** If you ran the server manually in the previous verification step, make sure you stopped it (using `Ctrl+C` in its terminal). The client application needs to be able to start its own instance of the server process using the command path you provided.
+1.  **Ensure the server can be launched by the client:** If you ran the server manually (either directly or via `docker run` in the terminal), make sure you stopped it (using `Ctrl+C`). The client application needs to be able to start its own instance of the server process using the command/args you provided.
 2.  **Interact with your configured client:** Open your MCP client (VS Code Chat, Claude Desktop, etc.) and ask questions designed to trigger the hashing tools:
     - "Calculate the MD5 hash of the text 'hello world'"
     - "What is the SHA256 hash for the string 'MCP is cool!'?"
     - "Use the calculate_sha256 tool on this sentence: The quick brown fox jumps over the lazy dog."
 
-The client should recognize the intent, execute the `hashing-mcp-server` command in the background using the absolute path you provided, send the request to the server process via stdio, receive the hash result, and display it back to you in the chat interface. Success means you see the correct hash output in the client.
+The client should recognize the intent, execute the server command (either the direct path or `docker run ...`) in the background, send the request to the server process via stdio, receive the hash result, and display it back to you in the chat interface. Success means you see the correct hash output in the client.
 
 ## Development (Contributing)
 
