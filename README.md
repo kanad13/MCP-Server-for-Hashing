@@ -19,8 +19,8 @@ If you are new to the concept of Model Context Protocol (MCP), then you can use 
   - [Understanding Model Context Protocol & Agentic AI](https://www.kunal-pathak.com/blog/model-context-protocol/)
 - **How can I build my own MCP Server?**
   - [Simple tutorial on how to build your own MCP Server](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/tutorial-build-mcp-server.md)
-- **Where to find the `hashing-mcp` server package?**
-  - You can find the [Python Package on PyPI](https://pypi.org/project/hashing-mcp/)
+- **Where to find the `hashing-mcp-server` package?**
+  - You can find the [Python Package on PyPI](https://pypi.org/project/hashing-mcp-server/)
   - You can find the source code in this [GitHub repository](https://github.com/kanad13/MCP-Server-for-Hashing)
   - See the sections below for installation and usage instructions.
 
@@ -32,73 +32,112 @@ I have used Claude Desktop as an example, but it works equally well with other M
 
 ## Prerequisites
 
-- Python 3.10 or later installed.
-- A tool to manage virtual environments (like Python's built-in `venv` or `uv`).
+- **To Run via Docker:** Docker installed and running.
+- **To Run Directly:** Python 3.13+ and a virtual environment tool (`venv`, `uv`).
+- **To Contribute/Develop:** Git, Python 3.13+, `uv` (recommended) or `pip`, Docker (optional, for testing build).
 
-## Installation
+## Option 1: Running the Server with Docker (Recommended)
 
-This section covers installing the `hashing-mcp` package into a virtual environment.
+This is the simplest way to run the server without managing Python environments directly.
 
-**(Choose one method: `uv` or `pip`)**
+**1. Get the Docker Image:**
 
-**1. Using `uv` (Recommended):**
+- **Pull from Docker Hub (Easiest):**
+
+  ```bash
+  docker pull kunalpathak13/hashing-mcp-server:latest
+  ```
+
+**2. Configure Your MCP Client:**
+
+Configure your client to use `docker run`.
+
+- **VS Code (`settings.json`):**
+
+  ```json
+  // In your VS Code settings.json (User or Workspace)
+  "mcp": {
+      "servers": {
+          "hashing-docker": { // Use a distinct name if needed
+              "command": "docker",
+              "args": [
+                  "run",
+                  "-i",      // Keep STDIN open for communication
+                  "--rm",    // Clean up container after exit
+                  "kunalpathak13/hashing-mcp-server:latest" // Change the tag to your version if needed e.g. "hashing-mcp-server:X.Y.Z"
+              ]
+          }
+      }
+  }
+  ```
+
+- **Claude Desktop (`claude_desktop_config.json`):**
+
+  ```json
+  {
+  	"mcpServers": {
+  		"hashing-docker": {
+  			"command": "docker",
+  			"args": [
+  				"run",
+  				"-i",
+  				"--rm",
+  				"kunalpathak13/hashing-mcp-server:latest" // Change the tag to your version if needed e.g. "hashing-mcp-server:X.Y.Z"
+  			]
+  		}
+  	}
+  }
+  ```
+
+- **Other Clients:** Adapt according to their docs, using `docker` as the command and `run -i --rm IMAGE_NAME` as arguments. Refer to their official documentation for precise configuration steps:
+
+  - [Claude for Desktop/Web Setup](https://modelcontextprotocol.io/quickstart/user)
+  - [VSCode MCP using Copilot](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
+  - [Open AI ChatGPT Agents (via Python)](https://openai.github.io/openai-agents-python/mcp/)
+
+**3. Test the Integration:**
+
+Once configured, interact with your MCP client (VS Code Chat, Claude Desktop, etc.). Ask questions designed to trigger the hashing tools:
+
+- "Calculate the MD5 hash of the text 'hello world'"
+- "What is the SHA256 hash for the string 'MCP is cool!'?"
+
+The client should start the Docker container in the background using the command you provided, send the request, receive the hash result, and display it.
+
+## Option 2: Running the Server Directly (Python Environment)
+
+Use this method if you prefer not to use Docker or for development purposes.
+
+**1. Set Up Environment & Install:**
 
 ```bash
-# Create a new directory (optional, but good practice)
+# Create a dedicated directory and navigate into it
 mkdir my_mcp_setup && cd my_mcp_setup
 
-# Create virtual environment and activate it
+# --- Create & Activate Virtual Environment (Choose ONE method) ---
+# Method A: Using uv (Recommended):
 uv venv
-# Activate on Linux/macOS:
-source .venv/bin/activate
-# Activate on Windows (Command Prompt/PowerShell):
-# .venv\Scripts\activate
-# (Ensure you are in the 'my_mcp_setup' directory when activating)
+source .venv/bin/activate # Linux/macOS
+# .venv\Scripts\activate # Windows
 
-# Install the package
-uv pip install hashing-mcp
+# Method B: Using standard venv:
+# python -m venv .venv
+# source .venv/bin/activate # Linux/macOS
+# .venv\Scripts\activate # Windows
+# ---
+
+# --- Install the package (within the active venv, choose ONE method) ---
+# Method A: Using uv:
+uv pip install hashing-mcp-server
+
+# Method B: Using pip:
+# pip install hashing-mcp-server
+# ---
 ```
 
-**2. Using `pip`:**
+**2. Find the Executable Path:**
 
-```bash
-# Create a new directory (optional, but good practice)
-mkdir my_mcp_setup && cd my_mcp_setup
-
-# Create virtual environment
-python -m venv .venv
-
-# Activate it
-# Activate on Linux/macOS:
-source .venv/bin/activate
-# Activate on Windows (Command Prompt/PowerShell):
-# .venv\Scripts\activate
-# (Ensure you are in the 'my_mcp_setup' directory when activating)
-
-# Install the package
-pip install hashing-mcp
-```
-
-_(Installation is now complete. The `hashing-mcp-server` command is available within the activated virtual environment.)_
-
-## Running the Server Manually (Optional Verification)
-
-Before configuring your client, you can run the server directly from your terminal to ensure it starts correctly. Make sure your virtual environment is still active.
-
-```bash
-# Ensure your venv is active first! (e.g., source .venv/bin/activate)
-hashing-mcp-server
-```
-
-The server will start and listen for MCP requests on standard input/output (stdio). You won't see much output unless a client connects or an error occurs. Press `Ctrl+C` to stop it. This step confirms the installation worked correctly before proceeding to client configuration.
-
-## Configuring Your MCP Client
-
-MCP clients need to know the exact command to execute the `hashing-mcp-server`. Since the client application (like VS Code or Claude Desktop) likely won't run with your specific virtual environment automatically activated, you **must** provide the **full, absolute path** to the `hashing-mcp-server` executable _inside_ the virtual environment you created during installation.
-
-**1. Find the Absolute Path:**
-
-With your virtual environment still active (run `source .venv/bin/activate` or `.venv\Scripts\activate` again if needed), use the appropriate command for your operating system in the terminal:
+With the virtual environment _active_, find the full, absolute path to the installed script:
 
 ```bash
 # On Linux/macOS:
@@ -110,11 +149,11 @@ where hashing-mcp-server
 # Example Output: C:\Users\User\my_mcp_setup\.venv\Scripts\hashing-mcp-server.exe
 ```
 
-**2. Copy the Full Path** displayed in the output from the command above.
+**Copy the full path** displayed in the output.
 
-**3. Update Your Client's Configuration:**
+**3. Configure Your MCP Client:**
 
-Use the copied absolute path in your specific MCP client's settings. Here are some common examples:
+Use the **absolute path** you copied in the client configuration.
 
 - **VS Code (`settings.json`):**
 
@@ -125,14 +164,14 @@ Use the copied absolute path in your specific MCP client's settings. Here are so
           // You can name this key anything, e.g., "hasher" or "cryptoTools"
           "hashing": {
               // Paste the full, absolute path you copied here:
-              "command": "/path/to/your/virtualenv/bin/hashing-mcp-server"
+              "command": "/full/path/to/your/virtualenv/bin/hashing-mcp-server"
               // No 'args' needed when running the installed script directly
           }
       }
   }
   ```
 
-  _(Replace `/path/to/your/virtualenv/bin/hashing-mcp-server` with your actual path)_
+  _(Replace the example path with your actual path)_
 
 - **Claude Desktop (`claude_desktop_config.json`):**
 
@@ -141,75 +180,94 @@ Use the copied absolute path in your specific MCP client's settings. Here are so
   	"mcpServers": {
   		"hashing": {
   			// Paste the full, absolute path you copied here:
-  			"command": "/path/to/your/virtualenv/bin/hashing-mcp-server"
-  			// Adjust the path based on your actual installation location.
+  			"command": "/full/path/to/your/virtualenv/bin/hashing-mcp-server"
   		}
   	}
   }
   ```
 
-- **Other Clients (Claude Web, OpenAI Agents, etc.):**
-  Follow the specific instructions provided by your client application. When prompted for the command or path to the MCP server executable, provide the **full absolute path** you found in step 1. Refer to their official documentation for precise configuration steps:
-  - [Claude for Desktop/Web Setup](https://modelcontextprotocol.io/quickstart/user)
-  - [VSCode MCP using Copilot](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
-  - [Open AI ChatGPT Agents (via Python)](https://openai.github.io/openai-agents-python/mcp/)
+  _(Replace the example path with your actual path)_
 
-## Testing the Integration
+- **Other Clients:** Follow their specific instructions, providing the **full absolute path** found in step 2 as the command.
 
-Once the server package is installed and your MCP client is configured with the correct absolute path:
+**4. Test the Integration:**
 
-1.  **Ensure the server can be launched by the client:** If you ran the server manually in the previous verification step, make sure you stopped it (using `Ctrl+C` in its terminal). The client application needs to be able to start its own instance of the server process using the command path you provided.
-2.  **Interact with your configured client:** Open your MCP client (VS Code Chat, Claude Desktop, etc.) and ask questions designed to trigger the hashing tools:
-    - "Calculate the MD5 hash of the text 'hello world'"
-    - "What is the SHA256 hash for the string 'MCP is cool!'?"
-    - "Use the calculate_sha256 tool on this sentence: The quick brown fox jumps over the lazy dog."
+Once configured, interact with your MCP client (VS Code Chat, Claude Desktop, etc.). Ask questions designed to trigger the hashing tools: - "Use the calculate_md5 tool on 'hello world'." - "Compute the SHA256 hash for the text 'MCP rocks'."
 
-The client should recognize the intent, execute the `hashing-mcp-server` command in the background using the absolute path you provided, send the request to the server process via stdio, receive the hash result, and display it back to you in the chat interface. Success means you see the correct hash output in the client.
+The client should start the server script using the absolute path you provided, send the request, receive the hash result, and display it.
 
-## Development (Contributing)
+## Contributing / Development Setup
 
-If you want to modify or contribute to this package:
+Follow these steps if you want to modify the server code or contribute.
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/kanad13/MCP-Server-for-Hashing.git
-    cd MCP-Server-for-Hashing
-    ```
-2.  **Set up the development environment (using uv):**
-    ```bash
-    # Create and activate virtual environment
-    uv venv
-    # Activate on Linux/macOS:
-    source .venv/bin/activate
-    # Activate on Windows:
-    # .venv\Scripts\activate
-    ```
-3.  **Install in editable mode with development dependencies:**
-    Install the package such that changes in `src/` are reflected immediately. Also installs optional dependencies defined under `[project.optional-dependencies.dev]` in `pyproject.toml` (e.g., `pytest`, `ruff`).
-    ```bash
-    uv pip install -e ".[dev]"
-    ```
-4.  **Run the server during development:**
-    Ensure your virtual environment is active. You can run the server using the installed script (available due to the `-e` flag):
-    ```bash
-    hashing-mcp-server
-    ```
-    Or execute the module directly:
-    ```bash
-    python -m hashing_mcp.cli
-    ```
+**1. Clone the Repository:**
 
-## Packaging and Publishing to PyPI
+```bash
+git clone https://github.com/kanad13/MCP-Server-for-Hashing.git
+cd MCP-Server-for-Hashing
+```
 
-_(For maintainers - Steps to release a new version)_
+**2. Set Up Development Environment:**
 
-1.  Ensure the development venv is activated: `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows).
-2.  **Install build tools:** `uv pip install build twine`
-3.  **Clean previous builds:** `rm -rf ./dist/*`
-4.  **Build the package:** `python -m build`
-5.  **Check the distribution files:** `twine check dist/*`
-6.  **Upload to PyPI:** `twine upload dist/*` (Use `--repository testpypi` for testing)
-7.  **Tag the release:** `git tag vX.Y.Z && git push --tags`
+```bash
+# Create & Activate Virtual Environment (using uv recommended)
+uv venv
+source .venv/bin/activate # Linux/macOS
+# .venv\Scripts\activate # Windows
+
+# Install in editable mode with development dependencies
+uv pip install -e ".[dev]"
+```
+
+_(This installs the package such that code changes in `src/` take effect immediately without reinstalling. It also installs tools defined in `[project.optional-dependencies.dev]` like `pytest`)_
+
+**3. Running Locally During Development:**
+Ensure your development virtual environment is active. You can run the server using:
+
+```bash
+# Run the installed script (available due to -e flag)
+hashing-mcp-server
+```
+
+Or execute the module directly:
+
+```bash
+python -m hashing_mcp.cli
+```
+
+*(You might temporarily configure your MCP client to point to the executable path within *this* specific development `.venv` for integrated testing)*
+
+**4. Running Tests:**
+Ensure your development virtual environment is active:
+
+```bash
+pytest
+```
+
+## Maintainer Tasks: Releasing a New Version
+
+_(For project maintainers)_
+
+The release process (building, testing, tagging, pushing to PyPI and Docker Hub) is automated by the `build_and_push.sh` script located in the repository root.
+
+**Prerequisites for Running the Script:**
+
+- You must be inside the **activated development virtual environment** (`source .venv/bin/activate` or `.venv\Scripts\activate`).
+- Required tools must be available: `uv` (or `pip`), `twine`, `git`, `docker`.
+- Credentials must be configured:
+  - Docker: Logged in via `docker login`.
+  - PyPI: Production API token configured via `TWINE_USERNAME=__token__` and `TWINE_PASSWORD=pypi-...` environment variables or `~/.pypirc`.
+- Push access granted to the target Git repository (`origin` by default) and the Docker Hub repository (`kunalpathak13/hashing-mcp-server` by default).
+
+**Release Steps:**
+
+1.  Ensure the `version` field in `pyproject.toml` is updated to the correct new version number.
+2.  Commit and push any final code changes to the main branch.
+3.  Make the release script executable (one-time setup): `chmod +x build_and_push.sh`
+4.  Activate the virtual environment: `source .venv/bin/activate` (or equivalent).
+5.  Run the script from the repository root: `./build_and_push.sh`
+6.  The script will perform all steps: build, check, upload to PyPI, build Docker image, tag Docker image (version and `latest`), push Docker images, create Git tag, push Git tag.
+7.  Verify the new package version is live on PyPI and the new Docker tags are available on Docker Hub.
 
 ## License
 
