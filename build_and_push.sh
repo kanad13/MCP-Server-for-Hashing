@@ -183,3 +183,26 @@ echo "  - Install Python package: pip install hashing-mcp-server==${VERSION}"
 echo "  - Pull latest Docker image: docker pull ${IMAGE_NAME}"
 echo "  - Pull specific Docker image: docker pull ${IMAGE_NAME}:${VERSION}"
 echo "=================================================="
+
+# Add to user json
+#	"mcp": {
+#		"servers": {
+#			"hashing": {
+#				"command": "/Users/Data/repos/dump/MCP-Server-for-Hashing/.venv/bin/hashing-mcp-server"
+#			},
+#			"hashing-docker": {
+#				"command": "docker",
+#				"args": ["run", "-i", "--rm", "kunalpathak13/hashing-mcp-server:latest"]
+#			}
+#		}
+#	}
+
+# add to /Users/kanad/Library/Application Support/Claude/claude_desktop_config.json
+
+#{
+#	"mcpServers": {
+#		"hashing": {
+#			"command": "/Users/Data/repos/dump/MCP-Server-for-Hashing/.venv/bin/hashing-mcp-server"
+#		}
+#	}
+#}

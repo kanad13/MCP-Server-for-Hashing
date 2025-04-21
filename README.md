@@ -21,7 +21,11 @@ If you are new to the concept of Model Context Protocol (MCP), then you can use 
   - [Simple tutorial on how to build your own MCP Server](https://github.com/kanad13/MCP-Server-for-Hashing/blob/master/docs/tutorial-build-mcp-server.md)
 - **Where to find the `hashing-mcp-server` package?**
   - You can find the [Python Package on PyPI](https://pypi.org/project/hashing-mcp-server/)
+  - You can find the [Docker Image on Docker Hub](https://hub.docker.com/r/kunalpathak13/hashing-mcp-server)
   - You can find the source code in this [GitHub repository](https://github.com/kanad13/MCP-Server-for-Hashing)
+  - You can find it also on MCP Server Lists like
+    - [mcp.so](https://mcp.so/server/hashing-mcp-server/KunalPathak)
+- **How to install and use the `hashing-mcp-server`?**
   - See the sections below for installation and usage instructions.
 
 ## Server in action
